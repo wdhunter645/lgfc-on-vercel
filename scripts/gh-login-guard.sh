@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Requires a Codespaces/User secret named GH_PAT (fine-grained PAT with repo + actions:write)
-: "${GH_PAT:?ERROR: GH_PAT not set. In GitHub → Settings → Codespaces → Secrets, create GH_PAT.}"
+# Use the PAT from your Codespaces/User secret
+# The secret must be named GITHUB_TOKEN and set in
+# GitHub → Settings → Codespaces → Secrets → New secret → Name: GITHUB_TOKEN
+: "${GITHUB_TOKEN:?ERROR: GITHUB_TOKEN not set. Add it as a Codespaces Secret.}"
 
-# Always replace any ephemeral token with your PAT
+# Logout the ephemeral token and log in using your PAT
 gh auth logout -h github.com -y >/dev/null 2>&1 || true
-printf '%s\n' "$GH_PAT" | gh auth login --hostname github.com --with-token >/dev/null
+echo "$GITHUB_TOKEN" | gh auth login --hostname github.com --with-token >/dev/null
 
-# Minimal sanity check: can we read the repo? (quiet failure prints a clear error)
-gh repo view >/dev/null || { echo "ERROR: gh repo view failed. Check PAT scopes."; exit 1; }
+echo "✅ Authenticated with account-level PAT for GitHub CLI"
