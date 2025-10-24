@@ -1,4 +1,7 @@
 # Lou Gehrig Fan Club Website
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 This is a [Next.js](https://nextjs.org) project for the Lou Gehrig Fan Club, celebrating the Iron Horse and his incredible legacy.
 
@@ -140,3 +143,34 @@ For questions or issues, contact: LouGehrigFanClub@gmail.com
 ---
 
 **Note**: This project is currently in active development. The prototype is complete and serves as the foundation for React component development.
+
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/cubic"><img src="https://avatars.githubusercontent.com/u/414982?v=4?s=100" width="100px;" alt="cubic"/><br /><sub><b>cubic</b></sub></a><br /><a href="https://github.com/wdhunter645/wdhunter645/lgfc-on-vercel/commits?author=cubic" title="Code">💻</a></td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td align="center" size="13px" colspan="7">
+        <img src="https://raw.githubusercontent.com/all-contributors/all-contributors-cli/1b8533af435da9854653492b1327a23a4dbd0a10/assets/logo-small.svg">
+          <a href="https://all-contributors.js.org/docs/en/bot/usage">Add your contributions</a>
+        </img>
+      </td>
+    </tr>
+  </tfoot>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
