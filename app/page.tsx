@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 
 export default function Home() {
-  const [year] = useState(new Date().getFullYear());
+  const year = new Date().getFullYear();
 
   const handleVote = (id: string) => {
     alert(`Vote recorded for ${id} (stub)`);
