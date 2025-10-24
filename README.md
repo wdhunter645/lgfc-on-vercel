@@ -5,6 +5,8 @@
 
 This is a [Next.js](https://nextjs.org) project for the Lou Gehrig Fan Club, celebrating the Iron Horse and his incredible legacy.
 
+**Status:** CI/CD workflows configured and tested with Vercel deployment.
+
 ## Project Structure
 
 ```
