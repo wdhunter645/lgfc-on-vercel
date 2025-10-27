@@ -28,7 +28,15 @@ export default function Timeline() {
   }, []);
 
   const formatYear = (dateString: string) => {
-    return new Date(dateString).getFullYear().toString();
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) {
+        return dateString; // Return original if invalid
+      }
+      return date.getFullYear().toString();
+    } catch {
+      return dateString; // Return original if error
+    }
   };
 
   if (loading) {

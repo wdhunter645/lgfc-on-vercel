@@ -53,9 +53,13 @@ export default function Voting() {
 
       if (response.ok && result.success) {
         setHasVoted(true);
-        // Update vote counts
-        if (result.votes) {
-          setVoteData(prev => prev ? { ...prev, ...result.votes } : null);
+        // Update vote counts with explicit property mapping
+        if (result.votes && typeof result.votes.votes_a === 'number' && typeof result.votes.votes_b === 'number') {
+          setVoteData(prev => prev ? { 
+            ...prev, 
+            votes_a: result.votes.votes_a,
+            votes_b: result.votes.votes_b
+          } : null);
         }
       } else {
         alert(result.error || 'Failed to record vote');
@@ -64,6 +68,13 @@ export default function Voting() {
       console.error('Vote error:', err);
       alert('Failed to record vote');
     }
+  };
+
+  const getErrorMessage = (errorText: string) => {
+    if (errorText === 'Database not configured. Set up Supabase environment variables.') {
+      return 'Voting will be available once database is configured.';
+    }
+    return errorText;
   };
 
   if (loading) {
@@ -80,9 +91,7 @@ export default function Voting() {
       <section className="voting-section">
         <h2 className="voting-title">Vote for your favorite picture</h2>
         <p style={{ textAlign: 'center', padding: '2rem' }}>
-          {error === 'Database not configured. Set up Supabase environment variables.' 
-            ? 'Voting will be available once database is configured.' 
-            : error}
+          {getErrorMessage(error)}
         </p>
       </section>
     );

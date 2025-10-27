@@ -75,7 +75,7 @@ export default function Faq() {
             aria-label="Search"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            onKeyPress={handleKeyPress}
+            onKeyDown={handleKeyPress}
           />
           <button className="search-btn" type="button" onClick={handleSearch}>
             Search
