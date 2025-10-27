@@ -1,0 +1,18 @@
+name = “next-starter-template”
+compatibility_date = “2024-10-22”
+pages_build_output_dir = “.vercel/output/static”
+
+# For Cloudflare Pages deployment only
+
+# This should NOT run during Vercel builds
+
+[build]
+command = “npm run build:cloudflare”
+
+[env.production]
+
+# Add your Cloudflare-specific environment variables here
+
+[env.preview]
+
+# Preview environment variables
