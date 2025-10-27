@@ -1,18 +1,47 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+
+interface FaqItem {
+  id: string;
+  question: string;
+  answer: string;
+  category?: string;
+}
 
 export default function Faq() {
-  const faqs = [
-    {
-      question: 'When was the Farewell Speech?',
-      answer: 'July 4, 1939 — Yankee Stadium.'
-    },
-    {
-      question: 'What position did Lou play?',
-      answer: 'First base.'
+  const [faqs, setFaqs] = useState<FaqItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const loadFaqs = useCallback((search?: string) => {
+    const url = search ? `/api/faq?search=${encodeURIComponent(search)}` : '/api/faq';
+    fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        setFaqs(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Failed to load FAQ:', err);
+        setLoading(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    loadFaqs();
+  }, [loadFaqs]);
+
+  const handleSearch = () => {
+    setLoading(true);
+    loadFaqs(searchTerm);
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearch();
     }
-  ];
+  };
 
   useEffect(() => {
     const handleFaqClick = (e: MouseEvent) => {
@@ -26,22 +55,44 @@ export default function Faq() {
     return () => document.removeEventListener('click', handleFaqClick);
   }, []);
 
+  if (loading && faqs.length === 0) {
+    return (
+      <section className="faq-section">
+        <h2 className="faq-title">News &amp; Q&amp;A</h2>
+        <p style={{ textAlign: 'center', padding: '2rem' }}>Loading...</p>
+      </section>
+    );
+  }
+
   return (
     <section className="faq-section">
       <h2 className="faq-title">News &amp; Q&amp;A</h2>
       <div className="faq-container">
         <div className="faq-search">
-          <input type="text" placeholder="Search questions..." aria-label="Search" />
-          <button className="search-btn" type="button">Search</button>
+          <input 
+            type="text" 
+            placeholder="Search questions..." 
+            aria-label="Search"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyPress={handleKeyPress}
+          />
+          <button className="search-btn" type="button" onClick={handleSearch}>
+            Search
+          </button>
         </div>
-        <ul className="faq-list">
-          {faqs.map((faq, index) => (
-            <li key={index} className="faq-item">
-              <button className="faq-question" type="button">{faq.question}</button>
-              <div className="faq-answer"><p>{faq.answer}</p></div>
-            </li>
-          ))}
-        </ul>
+        {loading ? (
+          <p style={{ textAlign: 'center', padding: '1rem' }}>Searching...</p>
+        ) : (
+          <ul className="faq-list">
+            {faqs.map((faq) => (
+              <li key={faq.id} className="faq-item">
+                <button className="faq-question" type="button">{faq.question}</button>
+                <div className="faq-answer"><p>{faq.answer}</p></div>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </section>
   );

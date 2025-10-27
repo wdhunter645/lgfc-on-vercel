@@ -1,31 +1,52 @@
 'use client';
 
+import { useState, useEffect } from 'react';
+
+interface TimelineEvent {
+  id: string;
+  date: string;
+  title: string;
+  description: string;
+  category?: string;
+}
+
 export default function Timeline() {
-  const events = [
-    {
-      date: '1923',
-      title: 'MLB Debut',
-      description: 'Gehrig debuts with the Yankees on June 15, 1923.'
-    },
-    {
-      date: '1925',
-      title: 'The Streak Begins',
-      description: 'Starts his consecutive games streak June 1, 1925.'
-    },
-    {
-      date: '1927',
-      title: 'Murderers\' Row',
-      description: 'Key part of the legendary 1927 Yankees lineup.'
-    }
-  ];
+  const [events, setEvents] = useState<TimelineEvent[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('/api/timeline')
+      .then(res => res.json())
+      .then(data => {
+        setEvents(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Failed to load timeline:', err);
+        setLoading(false);
+      });
+  }, []);
+
+  const formatYear = (dateString: string) => {
+    return new Date(dateString).getFullYear().toString();
+  };
+
+  if (loading) {
+    return (
+      <section className="timeline-section">
+        <h2 className="timeline-title">Lou Gehrig&apos;s Career Milestones</h2>
+        <p style={{ textAlign: 'center', padding: '2rem' }}>Loading...</p>
+      </section>
+    );
+  }
 
   return (
     <section className="timeline-section">
       <h2 className="timeline-title">Lou Gehrig&apos;s Career Milestones</h2>
       <div className="timeline-container">
-        {events.map((event, index) => (
-          <div key={index} className="timeline-item">
-            <div className="timeline-date">{event.date}</div>
+        {events.map((event) => (
+          <div key={event.id} className="timeline-item">
+            <div className="timeline-date">{formatYear(event.date)}</div>
             <div className="timeline-content">
               <h4>{event.title}</h4>
               <p>{event.description}</p>
