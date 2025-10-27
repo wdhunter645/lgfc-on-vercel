@@ -16,12 +16,12 @@ export default function Home() {
       <Hero />
       <main className="main-content">
         <Voting />
+        <SocialWall />
         <Friends />
         <Timeline />
         <Faq />
         <Results />
         <Calendar />
-        <SocialWall />
       </main>
       <Footer />
     </>
