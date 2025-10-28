@@ -356,3 +356,14 @@ body {
   margin-top: 1rem;
   font-size: 0.9rem;
 }
+
+.about-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.about-text {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin-bottom: 2rem;
+}
