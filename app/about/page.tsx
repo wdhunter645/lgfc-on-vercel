@@ -12,9 +12,9 @@ export default function About() {
         </div>
       </section>
       <main className="main-content">
-        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+        <div className="about-content">
           <h2 className="voting-title">Our Mission</h2>
-          <p style={{ fontSize: '1.1rem', lineHeight: '1.8', marginBottom: '2rem' }}>
+          <p className="about-text">
             The Lou Gehrig Fan Club is dedicated to celebrating and preserving the legacy of 
             one of baseball&apos;s greatest players. Lou Gehrig, known as the &quot;Iron Horse,&quot; set 
             records for consecutive games played and exemplified courage, dignity, and 
@@ -22,7 +22,7 @@ export default function About() {
           </p>
           
           <h2 className="voting-title">About Lou Gehrig</h2>
-          <p style={{ fontSize: '1.1rem', lineHeight: '1.8', marginBottom: '2rem' }}>
+          <p className="about-text">
             Henry Louis Gehrig (1903-1941) was a legendary first baseman for the New York 
             Yankees. His consecutive games streak of 2,130 games stood for 56 years. A 
             seven-time All-Star and two-time American League MVP, Gehrig&apos;s career was 
@@ -30,7 +30,7 @@ export default function About() {
           </p>
           
           <h2 className="voting-title">Join Our Community</h2>
-          <p style={{ fontSize: '1.1rem', lineHeight: '1.8', marginBottom: '2rem' }}>
+          <p className="about-text">
             Whether you&apos;re a lifelong baseball fan or just learning about Lou Gehrig&apos;s 
             incredible story, we welcome you to join our community. Together, we honor 
             his memory and continue to inspire others with his example of perseverance 
