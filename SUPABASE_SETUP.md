@@ -13,6 +13,9 @@ This guide walks you through setting up Supabase for the Lou Gehrig Fan Club web
 If you already have a Supabase project and environment variables configured:
 
 ```bash
+# Check your environment configuration
+npm run check:env
+
 # Run all setup steps
 npm run db:setup
 
@@ -21,6 +24,8 @@ npm run db:migrate  # Create tables and schema
 npm run db:seed     # Add sample data
 npm run db:test     # Verify connection
 ```
+
+**Note**: The scripts support both `NEXT_PUBLIC_SUPABASE_ANON_KEY` and `NEXT_PUBLIC_SUPABASE_API_KEY` for backwards compatibility.
 
 ## Step-by-Step Setup
 
@@ -50,6 +55,8 @@ Create a `.env.local` file in the project root (or update your existing `.env` f
 # Supabase Configuration
 NEXT_PUBLIC_SUPABASE_URL=https://xxxxxxxxxxxxx.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+# OR use the alternative name:
+# NEXT_PUBLIC_SUPABASE_API_KEY=your-anon-key-here
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here
 ```
 
@@ -57,6 +64,12 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here
 - Never commit `.env.local` to version control
 - The `SUPABASE_SERVICE_ROLE_KEY` has admin access - keep it secure
 - For production, set these as environment variables in Vercel
+- The scripts support both `NEXT_PUBLIC_SUPABASE_ANON_KEY` and `NEXT_PUBLIC_SUPABASE_API_KEY`
+
+You can verify your configuration by running:
+```bash
+npm run check:env
+```
 
 ### 4. Run Database Migrations
 
@@ -195,6 +208,16 @@ if (supabase) {
 ```
 
 ## Troubleshooting
+
+### Available npm Scripts
+
+```bash
+npm run check:env   # Verify environment variables are configured
+npm run db:test     # Test Supabase connection
+npm run db:migrate  # Run database migrations
+npm run db:seed     # Seed sample data
+npm run db:setup    # Run migrations + seeding (full setup)
+```
 
 ### "Missing Supabase credentials" error
 

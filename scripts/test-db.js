@@ -28,13 +28,13 @@ async function testSupabaseConnection() {
 
   // Check environment variables
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_API_KEY;
 
   if (!supabaseUrl || !supabaseKey) {
     log.error('Missing Supabase credentials');
     log.info('Required environment variables:');
     console.log('  - NEXT_PUBLIC_SUPABASE_URL');
-    console.log('  - NEXT_PUBLIC_SUPABASE_ANON_KEY');
+    console.log('  - NEXT_PUBLIC_SUPABASE_ANON_KEY (or NEXT_PUBLIC_SUPABASE_API_KEY)');
     process.exit(1);
   }
 
