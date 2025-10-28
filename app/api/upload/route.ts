@@ -1,24 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
-
-const backblazeKeyId = process.env.BACKBLAZE_KEY_ID;
-const backblazeAppKey = process.env.BACKBLAZE_APPLICATION_KEY;
-const backblazeBucket = process.env.BACKBLAZE_BUCKET_NAME;
-const backblazeEndpoint = process.env.BACKBLAZE_ENDPOINT;
-
-const s3Client = backblazeKeyId && backblazeAppKey && backblazeEndpoint
-  ? new S3Client({
-      endpoint: `https://${backblazeEndpoint}`,
-      region: 'us-west-004',
-      credentials: {
-        accessKeyId: backblazeKeyId,
-        secretAccessKey: backblazeAppKey
-      }
-    })
-  : null;
+import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { getB2ClientSingleton, getB2BucketName, buildMediaUrl, isB2Configured } from '@/lib/backblaze';
 
 export async function POST(request: NextRequest) {
-  if (!s3Client || !backblazeBucket) {
+  // Check if Backblaze B2 is configured
+  if (!isB2Configured()) {
+    return NextResponse.json(
+      { error: 'Storage not configured. Set up Backblaze B2 environment variables.' },
+      { status: 503 }
+    );
+  }
+
+  const s3Client = getB2ClientSingleton();
+  const bucketName = getB2BucketName();
+
+  if (!s3Client || !bucketName) {
     return NextResponse.json(
       { error: 'Storage not configured. Set up Backblaze B2 environment variables.' },
       { status: 503 }
@@ -37,13 +33,17 @@ export async function POST(request: NextRequest) {
     const fileName = `${Date.now()}-${file.name}`;
     
     await s3Client.send(new PutObjectCommand({
-      Bucket: backblazeBucket,
+      Bucket: bucketName,
       Key: fileName,
       Body: buffer,
       ContentType: file.type
     }));
     
-    const url = `${process.env.NEXT_PUBLIC_MEDIA_CDN_URL}/${fileName}`;
+    const url = buildMediaUrl(fileName);
+    
+    if (!url) {
+      return NextResponse.json({ error: 'CDN URL not configured' }, { status: 500 });
+    }
     
     return NextResponse.json({ url, success: true });
   } catch (error) {

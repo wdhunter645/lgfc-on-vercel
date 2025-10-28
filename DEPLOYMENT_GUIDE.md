@@ -252,6 +252,23 @@ The application is designed to work without backend services configured:
 
 This allows you to deploy and test the frontend before setting up backend services.
 
+### Testing Backblaze B2 Connection
+
+To verify B2 is properly configured, visit the status endpoint:
+
+**Local:** `http://localhost:3000/api/b2-status`  
+**Production:** `https://your-site.vercel.app/api/b2-status`
+
+Expected response when configured:
+```json
+{
+  "configured": true,
+  "bucketName": "lgfc-media-production",
+  "cdnBaseUrl": "https://f004.backblazeb2.com/file/lgfc-media-production",
+  "message": "Backblaze B2 is properly configured"
+}
+```
+
 ## Continuous Deployment
 
 Once connected to Vercel:
@@ -300,7 +317,8 @@ Once connected to Vercel:
 1. Verify Backblaze B2 credentials
 2. Check bucket permissions (should be Public)
 3. Verify CORS configuration if needed
-4. Test credentials with B2 CLI
+4. Test B2 configuration status: `curl https://your-site.vercel.app/api/b2-status`
+5. Check response to ensure B2 is properly configured
 
 ### Voting Not Working
 
