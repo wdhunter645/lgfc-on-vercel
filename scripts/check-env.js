@@ -5,6 +5,9 @@
  * Checks if all required environment variables are properly configured
  */
 
+// Load environment variables from .env file
+require('dotenv').config();
+
 const colors = {
   reset: '\x1b[0m',
   green: '\x1b[32m',

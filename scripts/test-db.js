@@ -5,6 +5,9 @@
  * This script verifies the connection to Supabase and checks table accessibility
  */
 
+// Load environment variables from .env file
+require('dotenv').config();
+
 const { createClient } = require('@supabase/supabase-js');
 
 // Color codes for terminal output
