@@ -69,7 +69,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          supabase db push --linked --non-interactive
+          supabase db push --linked
           echo "✅ Migrations applied."
 
       - name: Summary
