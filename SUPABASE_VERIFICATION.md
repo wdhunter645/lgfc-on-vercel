@@ -21,7 +21,7 @@ npm run verify:supabase
 
 #### 1. Environment Variables Configuration (2/3)
 - ✅ `NEXT_PUBLIC_SUPABASE_URL` is configured
-  - URL: `https://hfnqhpnhjkoypvwyckap.supabase.co`
+  - URL: `https://xxxxxxxxxxxxx.supabase.co` (configured correctly)
 - ✅ `NEXT_PUBLIC_SUPABASE_API_KEY` is configured
   - Anon/Public key is present and valid
 - ⚠️ `SUPABASE_SERVICE_ROLE_KEY` is not configured (optional for basic operations)
