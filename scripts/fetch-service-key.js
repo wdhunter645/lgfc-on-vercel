@@ -3,6 +3,13 @@
 /**
  * Fetch Supabase Service Role Key
  * Uses Supabase Management API to retrieve the service role key
+ * 
+ * SECURITY NOTE: This script intentionally outputs the service role key
+ * to the console so users can copy it to their .env file. The key is
+ * sensitive and should never be committed to version control.
+ * 
+ * Usage: node scripts/fetch-service-key.js
+ * Requires: SUPABASE_ACCESS_TOKEN and SUPABASE_PROJECT_ID in environment
  */
 
 require('dotenv').config();
@@ -43,8 +50,12 @@ const req = https.request(options, (res) => {
       const serviceKey = keys.find(k => k.name === 'service_role');
       if (serviceKey) {
         console.log('\n✅ Found service role key!');
-        console.log('\nAdd this to your .env file:');
+        console.log('\n⚠️  SECURITY WARNING: The key below is sensitive. Keep it secret!');
+        console.log('Add this to your .env file (and never commit .env to git):');
+        // CodeQL alert: Intentionally logging sensitive data for user to copy to .env
+        // This is the purpose of this script - to help users obtain their service key
         console.log('SUPABASE_SERVICE_ROLE_KEY=' + serviceKey.api_key);
+        console.log('\n⚠️  Remember: Never commit this key to version control!');
       } else {
         console.error('❌ Service role key not found');
         console.log('Available keys:', JSON.stringify(keys, null, 2));
