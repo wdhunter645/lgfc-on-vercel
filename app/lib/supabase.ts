@@ -4,6 +4,7 @@
  */
 
 import { createClient } from '@supabase/supabase-js';
+import type { Database } from './database.types';
 
 // Environment variables
 // Support both naming conventions for backwards compatibility
@@ -21,7 +22,7 @@ export function createClientComponentClient() {
     return null;
   }
   
-  return createClient(supabaseUrl, supabaseAnonKey);
+  return createClient<Database>(supabaseUrl, supabaseAnonKey);
 }
 
 /**
@@ -34,7 +35,7 @@ export function createServerComponentClient() {
     return null;
   }
   
-  return createClient(supabaseUrl, supabaseServiceKey, {
+  return createClient<Database>(supabaseUrl, supabaseServiceKey, {
     auth: {
       autoRefreshToken: false,
       persistSession: false
@@ -56,69 +57,25 @@ export function isServiceRoleConfigured(): boolean {
   return !!(supabaseUrl && supabaseServiceKey);
 }
 
-// Database type definitions
-export interface WeeklyVote {
-  id: string;
-  week_id: string;
-  image_a_url: string;
-  image_b_url: string;
-  votes_a: number;
-  votes_b: number;
-  start_date: string;
-  end_date: string;
-  created_at: string;
-}
-
-export interface VoteRecord {
-  id: string;
-  week_id: string;
-  voter_ip: string | null;
-  voter_fingerprint: string | null;
-  selected_option: 'A' | 'B';
-  voted_at: string;
-}
-
-export interface FriendOfClub {
-  id: string;
-  name: string;
-  description: string | null;
-  logo_url: string | null;
-  website_url: string | null;
-  display_order: number | null;
-  is_active: boolean;
-  created_at: string;
-}
-
-export interface TimelineEvent {
-  id: string;
-  date: string;
-  title: string;
-  description: string | null;
-  category: string | null;
-  image_url: string | null;
-  created_at: string;
-}
-
-export interface FaqItem {
-  id: string;
-  question: string;
-  answer: string;
-  category: string | null;
-  display_order: number | null;
-  is_published: boolean;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface CalendarEvent {
-  id: string;
-  title: string;
-  description: string | null;
-  event_date: string;
-  end_date: string | null;
-  location: string | null;
-  event_type: string | null;
-  registration_url: string | null;
-  is_published: boolean;
-  created_at: string;
-}
+// Re-export types from database.types.ts for backwards compatibility
+export type {
+  WeeklyVote,
+  VoteRecord,
+  FriendOfClub,
+  TimelineEvent,
+  FaqItem,
+  CalendarEvent,
+  WeeklyVoteInsert,
+  VoteRecordInsert,
+  FriendOfClubInsert,
+  TimelineEventInsert,
+  FaqItemInsert,
+  CalendarEventInsert,
+  WeeklyVoteUpdate,
+  VoteRecordUpdate,
+  FriendOfClubUpdate,
+  TimelineEventUpdate,
+  FaqItemUpdate,
+  CalendarEventUpdate,
+  Database
+} from './database.types';
