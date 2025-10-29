@@ -68,7 +68,6 @@ async function verifySupabaseSetup() {
   
   if (supabaseUrl) {
     checkPass(`NEXT_PUBLIC_SUPABASE_URL is configured`);
-    log.dim(`URL: ${supabaseUrl}`);
   } else {
     checkFail('NEXT_PUBLIC_SUPABASE_URL is not set');
   }
@@ -77,7 +76,6 @@ async function verifySupabaseSetup() {
     const keyName = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? 
       'NEXT_PUBLIC_SUPABASE_ANON_KEY' : 'NEXT_PUBLIC_SUPABASE_API_KEY';
     checkPass(`${keyName} is configured`);
-    log.dim(`Key: ${supabaseAnonKey.substring(0, 20)}...`);
   } else {
     checkFail('NEXT_PUBLIC_SUPABASE_ANON_KEY (or NEXT_PUBLIC_SUPABASE_API_KEY) is not set');
   }
