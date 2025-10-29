@@ -78,6 +78,32 @@ BACKBLAZE_ENDPOINT=s3.us-east-005.backblazeb2.com
 NEXT_PUBLIC_MEDIA_CDN_URL=https://f005.backblazeb2.com/file/your-bucket-name
 ```
 
+### Verifying Supabase Setup
+
+To verify that Supabase is properly configured:
+
+```bash
+# Check environment variables
+npm run check:env
+
+# Verify complete Supabase setup
+npm run verify:supabase
+
+# Test database connection
+npm run db:test
+```
+
+See [SUPABASE_VERIFICATION.md](./SUPABASE_VERIFICATION.md) for detailed verification results and [SUPABASE_SETUP.md](./SUPABASE_SETUP.md) for setup instructions.
+
+### Verifying Backblaze B2 Setup
+
+To verify that Backblaze B2 is properly configured:
+
+```bash
+# Check B2 connectivity
+npm run check:b2
+```
+
 See [B2_CONNECTIVITY_VERIFICATION.md](./B2_CONNECTIVITY_VERIFICATION.md) for detailed B2 setup and verification instructions.
 
 ### Continuous Deployment

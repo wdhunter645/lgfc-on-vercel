@@ -5,7 +5,8 @@
  * This script verifies the connection to Supabase and checks table accessibility
  */
 
-const { createClient } = require('@supabase/supabase-js');
+import 'dotenv/config';
+import { createClient } from '@supabase/supabase-js';
 
 // Color codes for terminal output
 const colors = {
