@@ -75,6 +75,22 @@ Checks:
 - NPM script configuration
 - Documentation
 
+### `count-tables.js`
+Counts and lists all tables in the Supabase database.
+
+```bash
+npm run db:count-tables
+```
+
+**Output:**
+- List of all expected tables
+- Verification status for each table
+- Total count of tables in use
+
+**Requirements:**
+- Network access to Supabase
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` or `SUPABASE_SERVICE_ROLE_KEY` environment variable
+
 ### `fetch-service-key.js`
 Fetches service role key from Supabase Management API.
 
@@ -108,6 +124,7 @@ node scripts/run-migrations-direct.js
 | `check-env.js` | Validate config | No | No |
 | `export-migrations.js` | Export SQL | No | No |
 | `verify-supabase-setup.js` | Verify setup | Optional | No |
+| `count-tables.js` | Count tables | Yes | No |
 | `run-migrations.js` | Create schema | Yes | Yes |
 | `seed-db.js` | Add sample data | Yes | Yes |
 | `test-db.js` | Test connection | Yes | No |
