@@ -58,7 +58,7 @@ export default function Faq() {
   if (loading && faqs.length === 0) {
     return (
       <section className="faq-section">
-        <h2 className="faq-title">FAQ and Submit questions</h2>
+        <h2 className="faq-title">Questions & Answers, FAQs</h2>
         <p style={{ textAlign: 'center', padding: '2rem' }}>Loading...</p>
       </section>
     );
@@ -66,7 +66,7 @@ export default function Faq() {
 
   return (
     <section className="faq-section">
-      <h2 className="faq-title">FAQ and Submit questions</h2>
+      <h2 className="faq-title">Questions & Answers, FAQs</h2>
       <div className="faq-container">
         <div className="faq-search">
           <input 
