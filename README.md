@@ -11,17 +11,37 @@ This is a [Next.js](https://nextjs.org) project for the Lou Gehrig Fan Club, cel
 
 ```
 lgfc-on-vercel/
-├── app/                    # Next.js app router
-│   ├── components/        # React components (to be created)
-│   ├── page.tsx          # Main page
-│   └── layout.tsx        # Root layout
+├── app/                      # Next.js app router
+│   ├── api/                 # API routes
+│   ├── components/          # React components
+│   ├── lib/                 # Utility libraries
+│   │   ├── database.types.ts  # TypeScript database types
+│   │   └── supabase.ts      # Supabase client configuration
+│   ├── page.tsx            # Main page
+│   └── layout.tsx          # Root layout
+├── supabase/                # Supabase configuration
+│   ├── migrations/         # Database migration files
+│   │   ├── 20250101000001_create_weekly_votes.sql
+│   │   ├── 20250101000002_create_vote_records.sql
+│   │   ├── 20250101000003_create_friends_of_club.sql
+│   │   ├── 20250101000004_create_timeline_events.sql
+│   │   ├── 20250101000005_create_faq_items.sql
+│   │   ├── 20250101000006_create_calendar_events.sql
+│   │   ├── 20250101000007_create_functions.sql
+│   │   └── 20250101000008_create_triggers.sql
+│   ├── seed/               # Sample data for development
+│   │   └── seed.sql
+│   ├── config.toml         # Supabase CLI configuration
+│   ├── README.md           # Supabase setup guide
+│   └── SCHEMA.md           # Database schema documentation
 ├── public/
-│   └── prototype/        # Static HTML/CSS prototype
-│       ├── index.html    # Complete visual scaffold
-│       ├── styles.css    # Consolidated styling
-│       └── README.md     # Prototype reference guide
-├── IMPLEMENTATION_GUIDE.md  # Comprehensive deployment guide
-└── vercel.json           # Vercel configuration
+│   └── prototype/          # Static HTML/CSS prototype
+│       ├── index.html      # Complete visual scaffold
+│       ├── styles.css      # Consolidated styling
+│       └── README.md       # Prototype reference guide
+├── scripts/                # Utility scripts
+├── IMPLEMENTATION_GUIDE.md # Comprehensive deployment guide
+└── vercel.json             # Vercel configuration
 ```
 
 ## Getting Started
@@ -80,14 +100,30 @@ NEXT_PUBLIC_MEDIA_CDN_URL=https://f005.backblazeb2.com/file/your-bucket-name
 
 ### Setting Up Supabase Database
 
-**Quick Start:**
+**Modern Approach (Recommended):**
 
-1. **Run migrations manually** (recommended for first-time setup):
-   - Copy contents of `supabase-migrations.sql`
+The project now uses the Supabase CLI with proper migration management:
+
+```bash
+# Start local development database
+npm run supabase:start
+
+# Apply migrations to production
+npx supabase link --project-ref <your-project-ref>
+npx supabase db push
+
+# Generate TypeScript types
+npm run supabase:types
+```
+
+**Legacy Approach:**
+
+1. **Run migrations manually**:
+   - Copy contents from `supabase/migrations/*.sql`
    - Open your Supabase project → SQL Editor
-   - Paste and run the SQL
+   - Execute each migration file in order
 
-2. **Or use automated migration** (if you have service role key):
+2. **Or use automated migration script**:
    ```bash
    npm run db:migrate
    npm run db:seed  # Optional: add sample data
@@ -107,9 +143,11 @@ npm run db:test
 ```
 
 **Documentation:**
-- [PR#17 Resolution Guide](./PR17_RESOLUTION.md) - Setup instructions and troubleshooting
+- [Supabase Directory README](./supabase/README.md) - Complete setup guide and CLI usage
+- [Database Schema Documentation](./supabase/SCHEMA.md) - Detailed schema reference
 - [Supabase Setup Guide](./SUPABASE_SETUP.md) - Comprehensive setup instructions
 - [Troubleshooting Guide](./SUPABASE_TROUBLESHOOTING.md) - Network issues and workarounds
+- [PR#17 Resolution Guide](./PR17_RESOLUTION.md) - Setup instructions and troubleshooting
 - [Verification Results](./SUPABASE_VERIFICATION.md) - Setup verification details
 
 ### Verifying Backblaze B2 Setup
