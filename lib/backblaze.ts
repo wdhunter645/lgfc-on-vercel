@@ -8,11 +8,12 @@ import { S3Client } from '@aws-sdk/client-s3';
  */
 
 // Environment variables for Backblaze B2
-const backblazeKeyId = process.env.BACKBLAZE_KEY_ID;
-const backblazeAppKey = process.env.BACKBLAZE_APPLICATION_KEY;
-const backblazeBucket = process.env.BACKBLAZE_BUCKET_NAME;
-const backblazeEndpoint = process.env.BACKBLAZE_ENDPOINT;
-const mediaBaseCdnUrl = process.env.NEXT_PUBLIC_MEDIA_CDN_URL;
+// Support both BACKBLAZE_ and B2_ prefixes for backwards compatibility
+const backblazeKeyId = process.env.BACKBLAZE_KEY_ID || process.env.B2_KEY_ID;
+const backblazeAppKey = process.env.BACKBLAZE_APPLICATION_KEY || process.env.B2_APP_KEY;
+const backblazeBucket = process.env.BACKBLAZE_BUCKET_NAME || process.env.B2_BUCKET;
+const backblazeEndpoint = process.env.BACKBLAZE_ENDPOINT || process.env.B2_ENDPOINT;
+const mediaBaseCdnUrl = process.env.NEXT_PUBLIC_MEDIA_CDN_URL || process.env.PUBLIC_B2_BASE_URL;
 
 /**
  * Check if Backblaze B2 is configured
