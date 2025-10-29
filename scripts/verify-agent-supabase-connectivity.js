@@ -93,7 +93,7 @@ async function testCredentials() {
   
   if (supabaseAnonKey) {
     log.success('NEXT_PUBLIC_SUPABASE_ANON_KEY is configured');
-    log.dim(`Key length: ${supabaseAnonKey.length} characters`);
+    log.dim('Anonymous key is available for client-side access');
   } else {
     log.error('NEXT_PUBLIC_SUPABASE_ANON_KEY is not set');
     recordTest('Environment Credentials', 'failed', credentials);
