@@ -12,6 +12,7 @@
     "db:seed": "node scripts/seed-db.js",
     "db:test": "node scripts/test-db.js",
     "db:setup": "npm run db:migrate && npm run db:seed",
+    "db:export": "node scripts/export-migrations.js",
     "verify:supabase": "node scripts/verify-supabase-setup.js"
   },
   "dependencies": {

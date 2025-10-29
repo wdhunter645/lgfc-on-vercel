@@ -75,9 +75,22 @@ BACKBLAZE_KEY_ID=your_b2_key_id
 BACKBLAZE_APPLICATION_KEY=your_b2_app_key
 ```
 
-### Verifying Supabase Setup
+### Setting Up Supabase Database
 
-To verify that Supabase is properly configured:
+**Quick Start:**
+
+1. **Run migrations manually** (recommended for first-time setup):
+   - Copy contents of `supabase-migrations.sql`
+   - Open your Supabase project → SQL Editor
+   - Paste and run the SQL
+
+2. **Or use automated migration** (if you have service role key):
+   ```bash
+   npm run db:migrate
+   npm run db:seed  # Optional: add sample data
+   ```
+
+**Verification:**
 
 ```bash
 # Check environment variables
@@ -86,11 +99,15 @@ npm run check:env
 # Verify complete Supabase setup
 npm run verify:supabase
 
-# Test database connection
+# Test database connection (requires network access)
 npm run db:test
 ```
 
-See [SUPABASE_VERIFICATION.md](./SUPABASE_VERIFICATION.md) for detailed verification results and [SUPABASE_SETUP.md](./SUPABASE_SETUP.md) for setup instructions.
+**Documentation:**
+- [PR#17 Resolution Guide](./PR17_RESOLUTION.md) - Setup instructions and troubleshooting
+- [Supabase Setup Guide](./SUPABASE_SETUP.md) - Comprehensive setup instructions
+- [Troubleshooting Guide](./SUPABASE_TROUBLESHOOTING.md) - Network issues and workarounds
+- [Verification Results](./SUPABASE_VERIFICATION.md) - Setup verification details
 
 ### Continuous Deployment
 
