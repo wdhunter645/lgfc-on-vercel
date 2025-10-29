@@ -4,17 +4,19 @@ Use this checklist to verify that all database tables were created successfully.
 
 ## Quick Verification
 
-Run the automated verification script:
+Run the automated verification script (uses existing npm script from repository):
 
 ```bash
 npm run db:test
 ```
 
-This will check:
-- ✅ Connection to Supabase
-- ✅ All 6 tables exist and are accessible
-- ✅ Row Level Security (RLS) policies are working
-- ✅ Service role key (if configured)
+**What this does:**
+- Tests basic connection to Supabase
+- Checks that all 6 tables exist and are accessible
+- Verifies Row Level Security (RLS) policies are working
+- Tests service role key if configured
+
+This script is located at `scripts/test-db.js` and was already part of the repository.
 
 ---
 
@@ -197,9 +199,13 @@ SELECT * FROM weekly_votes LIMIT 1;
 -- This should work (public read access)
 SELECT * FROM timeline_events LIMIT 1;
 
--- This should only show active items
-SELECT * FROM friends_of_club WHERE is_active = false LIMIT 1;
--- Expected: Empty result (RLS filters inactive items)
+-- Test RLS filtering - should only show active items
+SELECT * FROM friends_of_club;
+-- Expected: Only returns records where is_active = true
+
+-- Try to access inactive items (should be filtered by RLS)
+SELECT * FROM friends_of_club WHERE is_active = false;
+-- Expected: Empty result or error (RLS blocks inactive items from public access)
 ```
 
 ### 3. Test Database Functions

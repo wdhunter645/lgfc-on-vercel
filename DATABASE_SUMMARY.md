@@ -168,13 +168,20 @@ SUPABASE_SERVICE_ROLE_KEY=eyJxxx...
 
 ## TypeScript Types
 
-Generate type-safe interfaces:
+Generate type-safe interfaces from your database schema:
 
 ```bash
 npm run supabase:types
 ```
 
-This creates `app/lib/database.types.ts` with TypeScript definitions for all tables.
+**Requirements:**
+- Supabase CLI installed and configured
+- Local Supabase instance running (`npm run supabase:start`)
+- Or project linked to production (`npx supabase link`)
+
+**Output:** Creates `app/lib/database.types.ts` with TypeScript definitions for all tables, providing full type safety for database queries.
+
+**Note:** This is optional but highly recommended for TypeScript projects.
 
 ## Further Documentation
 
