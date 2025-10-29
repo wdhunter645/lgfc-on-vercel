@@ -1,15 +1,11 @@
-name: Supabase Migrate (Auto, env-aware)
+name: Supabase Migrate (single-prod)
 
 on:
   push:
-    branches: [ dev, main ]
+    branches: [ main, test ]
     paths:
       - "supabase/migrations/**"
       - ".github/workflows/supabase-migrate.yml"
-  pull_request:
-    branches: [ dev, main ]
-    paths:
-      - "supabase/migrations/**"
   workflow_dispatch:
 
 concurrency:
@@ -21,83 +17,55 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
-    # Branch → GitHub Environment
-    strategy:
-      matrix:
-        include:
-          - branch: dev
-            env_name: dev
-          - branch: main
-            env_name: prod
-
-    if: github.ref_name == matrix.branch
-    environment: ${{ matrix.env_name }}
-
-    # Expose a bunch of possible secret names. We'll resolve them in a step.
     env:
-      # Repo-level PAT (any of these is fine)
-      SB_PAT_A: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-      SB_PAT_B: ${{ secrets.SUPABASE_PAT }}
-      SB_PAT_C: ${{ secrets.SUPABASE_TOKEN }}
-
-      # Env-scoped project ref candidates (set these as environment secrets under dev/prod)
-      SB_REF_1: ${{ secrets.SUPABASE_PROJECT_REF }}
-      SB_REF_2: ${{ secrets.SUPABASE_PROJECT_ID }}
-      SB_REF_3: ${{ secrets.SUPABASE_REF }}
-      SB_REF_4: ${{ secrets.PROJECT_REF }}
-      SB_REF_5: ${{ secrets.SUPABASE_PROJECT }}
-      SB_REF_6: ${{ secrets.SUPABASE_DB_REF }}
-
-      # Env-scoped DB password candidates
-      SB_PW_1: ${{ secrets.SUPABASE_DB_PASSWORD }}
-      SB_PW_2: ${{ secrets.DATABASE_PASSWORD }}
-      SB_PW_3: ${{ secrets.POSTGRES_PASSWORD }}
-      SB_PW_4: ${{ secrets.SUPABASE_PASSWORD }}
-      SB_PW_5: ${{ secrets.DB_PASSWORD }}
+      # Use the exact repo secret names you already have
+      SB_PAT: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SB_REF: ${{ secrets.SUPABASE_PROJECT_ID }}
+      SB_PW:  ${{ secrets.SUPABASE_DB_PASSWORD }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with: { fetch-depth: 1 }
+        with:
+          fetch-depth: 1
 
-      - name: Resolve secrets (no renames required)
-        id: resolve
+      - name: Ensure migrations exist (soft skip)
+        id: check
         shell: bash
         run: |
           set -euo pipefail
-          pick() { for v in "$@"; do [ -n "$v" ] && { echo "$v"; return 0; }; done; return 1; }
-
-          PAT="$(pick "${SB_PAT_A:-}" "${SB_PAT_B:-}" "${SB_PAT_C:-}")" || { echo "❌ Supabase PAT missing (set SUPABASE_ACCESS_TOKEN | SUPABASE_PAT | SUPABASE_TOKEN)"; exit 1; }
-          REF="$(pick "${SB_REF_1:-}" "${SB_REF_2:-}" "${SB_REF_3:-}" "${SB_REF_4:-}" "${SB_REF_5:-}" "${SB_REF_6:-}")" || { echo "❌ Supabase project ref missing in '${{ matrix.env_name }}' environment"; exit 1; }
-          PWD="$(pick "${SB_PW_1:-}" "${SB_PW_2:-}" "${SB_PW_3:-}" "${SB_PW_4:-}" "${SB_PW_5:-}")" || { echo "❌ Supabase DB password missing in '${{ matrix.env_name }}' environment"; exit 1; }
-
-          echo "::add-mask::$PAT"; echo "::add-mask::$PWD"
-          echo "pat=$PAT"   >> "$GITHUB_OUTPUT"
-          echo "ref=$REF"   >> "$GITHUB_OUTPUT"
-          echo "pwd=$PWD"   >> "$GITHUB_OUTPUT"
-
-      - name: Ensure migrations exist (soft pass if none)
-        shell: bash
-        run: |
           if [ ! -d "supabase/migrations" ] || ! ls supabase/migrations/*.sql >/dev/null 2>&1; then
-            echo "⚠ No migrations found; skipping apply."
-            exit 0
+            echo "no_migrations=true" >> "$GITHUB_OUTPUT"
+            echo "ℹ️ No migrations found. Skipping apply."
+          else
+            echo "no_migrations=false" >> "$GITHUB_OUTPUT"
+            echo "✅ Migrations present."
           fi
 
       - name: Install Supabase CLI
+        if: steps.check.outputs.no_migrations == 'false'
         uses: supabase/setup-cli@v1
-        with: { version: latest }
+        with:
+          version: latest
 
-      - name: Login & Link
+      - name: Login & Link (single Supabase prod)
+        if: steps.check.outputs.no_migrations == 'false'
         shell: bash
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ env.SB_PAT }}
+          SUPABASE_PROJECT_ID: ${{ env.SB_REF }}
+          SUPABASE_DB_PASSWORD: ${{ env.SB_PW }}
         run: |
           set -euo pipefail
           supabase --version
-          supabase login --token "${{ steps.resolve.outputs.pat }}"
-          supabase link --project-ref "${{ steps.resolve.outputs.ref }}" --password "${{ steps.resolve.outputs.pwd }}" --non-interactive
-          echo "✅ Linked to project ${{ steps.resolve.outputs.ref }} (env: ${{ matrix.env_name }})"
+          # Login with PAT
+          supabase login --token "${SUPABASE_ACCESS_TOKEN}"
+          # Link to the one prod project (no env switching)
+          supabase link --project-ref "${SUPABASE_PROJECT_ID}" --password "${SUPABASE_DB_PASSWORD}"
+          echo "✅ Linked to project ${SUPABASE_PROJECT_ID}"
 
       - name: Apply migrations (db push)
+        if: steps.check.outputs.no_migrations == 'false'
         shell: bash
         run: |
           set -euo pipefail
@@ -107,6 +75,5 @@ jobs:
       - name: Summary
         if: always()
         run: |
-          echo "Branch: ${{ matrix.branch }}"
-          echo "Environment: ${{ matrix.env_name }}"
-          echo "Project Ref: ${{ steps.resolve.outputs.ref }}"
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Project Ref: ${{ env.SB_REF }}"
