@@ -263,10 +263,13 @@ async function listPublicSchemaTables() {
   }
   
   // Method 2: Use Supabase client to check expected tables
+  // NOTE: This method checks against a hardcoded list of expected tables
+  // from repository documentation, not a live query to information_schema
   try {
     log.info('Using Supabase client to check for tables...');
     const supabase = createClient(supabaseUrl, supabaseKey);
     
+    // Expected tables based on repository documentation
     const expectedTables = [
       'weekly_votes',
       'vote_records',
@@ -276,8 +279,12 @@ async function listPublicSchemaTables() {
       'calendar_events'
     ];
     
+    log.dim('Note: Checking against expected tables from repository docs');
+    
     const foundTables = [];
     const missingTables = [];
+    
+    let networkError = false;
     
     for (const tableName of expectedTables) {
       try {
@@ -287,16 +294,40 @@ async function listPublicSchemaTables() {
         
         if (error) {
           if (error.code === '42P01') {
+            // Table doesn't exist
             missingTables.push(tableName);
+          } else if (error.message && (error.message.includes('fetch failed') || error.message.includes('Failed to fetch'))) {
+            // Network error - can't determine table existence
+            networkError = true;
+            break;
           } else {
+            // Table exists but query had other error (RLS, permissions, etc)
             foundTables.push(tableName);
           }
         } else {
           foundTables.push(tableName);
         }
       } catch (error) {
+        if (error.message && (error.message.includes('fetch failed') || error.message.includes('Failed to fetch'))) {
+          // Network error - can't determine table existence
+          networkError = true;
+          break;
+        }
         missingTables.push(tableName);
       }
+    }
+    
+    if (networkError) {
+      log.error('Network connection failed - cannot verify table existence');
+      log.dim('Unable to connect to Supabase from this environment');
+      log.dim(`Expected ${expectedTables.length} tables based on repository docs, but cannot verify`);
+      recordTest('List Public Schema Tables', 'failed', { 
+        method: 'client',
+        error: 'Network connection failed',
+        expectedTables: expectedTables.length,
+        note: 'Cannot connect to Supabase to verify actual table existence'
+      });
+      return { success: false, error: 'Network connection failed' };
     }
     
     if (foundTables.length > 0) {
@@ -435,27 +466,36 @@ function generateSummaryReport() {
   
   console.log('\n' + '='.repeat(70));
   
-  if (testResults.summary.failed === 0) {
+  // Determine actual connectivity status
+  const credentialsTest = testResults.tests.find(t => t.name === 'Environment Credentials');
+  const connectionTest = testResults.tests.find(t => t.name === 'Supabase Connection');
+  const tablesTest = testResults.tests.find(t => t.name === 'List Public Schema Tables');
+  
+  const hasCredentials = credentialsTest && credentialsTest.status === 'passed';
+  const canConnect = connectionTest && connectionTest.status === 'passed';
+  const canListTables = tablesTest && tablesTest.status === 'passed';
+  
+  if (testResults.summary.failed === 0 && canConnect && canListTables) {
     log.success('✨ Connectivity verification successful!');
     console.log(`\n${colors.bold}Overall Status:${colors.reset} ${colors.green}CONNECTED${colors.reset}`);
-    
-    if (testResults.summary.warnings > 0) {
-      console.log('\nℹ️  There are some warnings that may need attention.');
-      console.log('The agent can verify credentials and table schema, but direct queries');
-      console.log('may be blocked by network restrictions in this CI/CD environment.');
-      console.log('\nThis is expected behavior and does not indicate a problem with:');
-      console.log('  ✅ Environment credential configuration');
-      console.log('  ✅ Supabase setup and table schema');
-      console.log('  ✅ The ability to connect in production environments');
-    } else {
-      console.log('\nThe GitHub Copilot agent has successfully verified:');
-      console.log('  ✅ Connection to Supabase using environment credentials');
-      console.log('  ✅ Ability to execute basic read queries');
-      console.log('  ✅ Access to database tables in the public schema');
-    }
+    console.log('\nThe GitHub Copilot agent has successfully verified:');
+    console.log('  ✅ Connection to Supabase using environment credentials');
+    console.log('  ✅ Ability to execute basic read queries');
+    console.log('  ✅ Access to database tables in the public schema');
+  } else if (testResults.summary.failed === 0 && hasCredentials) {
+    log.warning('⚠️  Connectivity verification completed with warnings');
+    console.log(`\n${colors.bold}Overall Status:${colors.reset} ${colors.yellow}NETWORK RESTRICTED${colors.reset}`);
+    console.log('\nThe agent can verify credentials but cannot establish network connection.');
+    console.log('This is common in CI/CD environments with network restrictions.');
+    console.log('\n✅ Confirmed:');
+    console.log('  ✅ Environment credential configuration is correct');
+    console.log('\n❌ Cannot verify (network blocked):');
+    console.log('  ❌ Direct connection to Supabase');
+    console.log('  ❌ Database query execution');
+    console.log('  ❌ Table schema verification');
   } else {
     log.error('⚠️  Connectivity verification failed');
-    console.log(`\n${colors.bold}Overall Status:${colors.reset} ${colors.red}FAILED${colors.reset}`);
+    console.log(`\n${colors.bold}Overall Status:${colors.reset} ${colors.red}NOT CONNECTED${colors.reset}`);
     console.log('\nPlease review the failed tests above and ensure:');
     console.log('  1. Environment variables are properly configured');
     console.log('  2. Supabase credentials are valid');
