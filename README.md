@@ -78,9 +78,22 @@ BACKBLAZE_ENDPOINT=s3.us-east-005.backblazeb2.com
 NEXT_PUBLIC_MEDIA_CDN_URL=https://f005.backblazeb2.com/file/your-bucket-name
 ```
 
-### Verifying Supabase Setup
+### Setting Up Supabase Database
 
-To verify that Supabase is properly configured:
+**Quick Start:**
+
+1. **Run migrations manually** (recommended for first-time setup):
+   - Copy contents of `supabase-migrations.sql`
+   - Open your Supabase project → SQL Editor
+   - Paste and run the SQL
+
+2. **Or use automated migration** (if you have service role key):
+   ```bash
+   npm run db:migrate
+   npm run db:seed  # Optional: add sample data
+   ```
+
+**Verification:**
 
 ```bash
 # Check environment variables
@@ -89,11 +102,15 @@ npm run check:env
 # Verify complete Supabase setup
 npm run verify:supabase
 
-# Test database connection
+# Test database connection (requires network access)
 npm run db:test
 ```
 
-See [SUPABASE_VERIFICATION.md](./SUPABASE_VERIFICATION.md) for detailed verification results and [SUPABASE_SETUP.md](./SUPABASE_SETUP.md) for setup instructions.
+**Documentation:**
+- [PR#17 Resolution Guide](./PR17_RESOLUTION.md) - Setup instructions and troubleshooting
+- [Supabase Setup Guide](./SUPABASE_SETUP.md) - Comprehensive setup instructions
+- [Troubleshooting Guide](./SUPABASE_TROUBLESHOOTING.md) - Network issues and workarounds
+- [Verification Results](./SUPABASE_VERIFICATION.md) - Setup verification details
 
 ### Verifying Backblaze B2 Setup
 
