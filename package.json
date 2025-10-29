@@ -16,6 +16,7 @@
     "db:test": "node scripts/test-db.js",
     "db:setup": "npm run db:migrate && npm run db:seed",
     "db:export": "node scripts/export-migrations.js",
+    "db:count-tables": "node scripts/count-tables.js",
     "verify:supabase": "node scripts/verify-supabase-setup.js",
     "supabase:start": "npx supabase start",
     "supabase:stop": "npx supabase stop",
