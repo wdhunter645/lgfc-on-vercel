@@ -75,6 +75,23 @@ BACKBLAZE_KEY_ID=your_b2_key_id
 BACKBLAZE_APPLICATION_KEY=your_b2_app_key
 ```
 
+### Verifying Supabase Setup
+
+To verify that Supabase is properly configured:
+
+```bash
+# Check environment variables
+npm run check:env
+
+# Verify complete Supabase setup
+npm run verify:supabase
+
+# Test database connection
+npm run db:test
+```
+
+See [SUPABASE_VERIFICATION.md](./SUPABASE_VERIFICATION.md) for detailed verification results and [SUPABASE_SETUP.md](./SUPABASE_SETUP.md) for setup instructions.
+
 ### Continuous Deployment
 
 - Automatic deployments on push to `main` branch
