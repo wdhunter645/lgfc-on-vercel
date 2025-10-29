@@ -73,7 +73,12 @@ NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_key
 BACKBLAZE_KEY_ID=your_b2_key_id
 BACKBLAZE_APPLICATION_KEY=your_b2_app_key
+BACKBLAZE_BUCKET_NAME=your_bucket_name
+BACKBLAZE_ENDPOINT=s3.us-east-005.backblazeb2.com
+NEXT_PUBLIC_MEDIA_CDN_URL=https://f005.backblazeb2.com/file/your-bucket-name
 ```
+
+See [B2_CONNECTIVITY_VERIFICATION.md](./B2_CONNECTIVITY_VERIFICATION.md) for detailed B2 setup and verification instructions.
 
 ### Continuous Deployment
 
