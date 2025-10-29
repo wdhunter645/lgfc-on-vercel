@@ -5,10 +5,8 @@
  * Populates the database with initial sample data
  */
 
-// Load environment variables from .env file
-require('dotenv').config();
-
-const { createClient } = require('@supabase/supabase-js');
+import 'dotenv/config';
+import { createClient } from '@supabase/supabase-js';
 
 const colors = {
   reset: '\x1b[0m',

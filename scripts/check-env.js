@@ -5,8 +5,7 @@
  * Checks if all required environment variables are properly configured
  */
 
-// Load environment variables from .env file
-require('dotenv').config();
+import 'dotenv/config';
 
 const colors = {
   reset: '\x1b[0m',
@@ -68,9 +67,12 @@ function main() {
   
   // Backblaze B2 Configuration (Optional)
   log.header('Backblaze B2 Configuration (Optional):');
-  const hasB2 = checkEnvVar('BACKBLAZE_KEY_ID', false) &&
-                checkEnvVar('BACKBLAZE_APPLICATION_KEY', false) &&
-                checkEnvVar('BACKBLAZE_BUCKET_NAME', false);
+  const hasB2 = checkEnvVar('BACKBLAZE_KEY_ID', false, ['B2_KEY_ID']) &&
+                checkEnvVar('BACKBLAZE_APPLICATION_KEY', false, ['B2_APP_KEY']) &&
+                checkEnvVar('BACKBLAZE_BUCKET_NAME', false, ['B2_BUCKET']) &&
+                checkEnvVar('BACKBLAZE_ENDPOINT', false, ['B2_ENDPOINT']);
+  
+  checkEnvVar('NEXT_PUBLIC_MEDIA_CDN_URL', false, ['PUBLIC_B2_BASE_URL']);
   
   if (!hasB2) {
     log.info('  Backblaze B2 is optional and used for media storage');

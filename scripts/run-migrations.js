@@ -5,12 +5,14 @@
  * Runs SQL migrations to set up the Supabase database schema
  */
 
-// Load environment variables from .env file
-require('dotenv').config();
+import 'dotenv/config';
+import { createClient } from '@supabase/supabase-js';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const { createClient } = require('@supabase/supabase-js');
-const fs = require('fs');
-const path = require('path');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const colors = {
   reset: '\x1b[0m',
