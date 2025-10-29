@@ -157,6 +157,6 @@ Helper for creating GitHub repository secrets.
 ## Support
 
 For help:
-- See `../PR17_RESOLUTION.md` for setup guide
-- See `../SUPABASE_TROUBLESHOOTING.md` for troubleshooting
-- See `../SUPABASE_SETUP.md` for comprehensive documentation
+- See `PR17_RESOLUTION.md` for setup guide
+- See `SUPABASE_TROUBLESHOOTING.md` for troubleshooting
+- See `SUPABASE_SETUP.md` for comprehensive documentation

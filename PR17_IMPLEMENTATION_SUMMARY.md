@@ -127,9 +127,10 @@ Expected output:
 ## Support
 
 For help:
-- See `PR17_RESOLUTION.md` for detailed instructions
-- See `SUPABASE_TROUBLESHOOTING.md` for common issues
-- See `SUPABASE_SETUP.md` for full setup guide
+- See `PR17_RESOLUTION.md` for detailed setup instructions and multiple solution paths
+- See `SUPABASE_TROUBLESHOOTING.md` for troubleshooting common issues
+- See `SUPABASE_SETUP.md` for comprehensive reference documentation
+- See `README.md` for quick start instructions
 - Contact: LouGehrigFanClub@gmail.com
 
 ## Conclusion
