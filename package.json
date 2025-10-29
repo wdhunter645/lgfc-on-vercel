@@ -10,6 +10,7 @@
     "lint": "eslint",
     "check:env": "node scripts/check-env.js",
     "check:b2": "node scripts/verify-b2.js",
+    "db:create": "node scripts/create-supabase-tables.js",
     "db:migrate": "node scripts/run-migrations.js",
     "db:seed": "node scripts/seed-db.js",
     "db:test": "node scripts/test-db.js",

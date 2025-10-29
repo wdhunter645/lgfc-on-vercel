@@ -46,12 +46,34 @@ lgfc-on-vercel/
 
 ## Getting Started
 
-### Development
-
-First, install dependencies and run the development server:
+### 1. Install Dependencies
 
 ```bash
 npm install
+```
+
+### 2. Set Up Supabase Database
+
+**⚠️ IMPORTANT: Create tables before running the application**
+
+The fastest way to create all required database tables:
+
+```bash
+# Option 1: Using the quick script
+./create-tables.sh
+
+# Option 2: Using npm
+npm run db:migrate
+
+# Option 3: Using Supabase CLI
+npx supabase db push
+```
+
+For detailed instructions and manual setup, see **[CREATE_TABLES.md](./CREATE_TABLES.md)**
+
+### 3. Run Development Server
+
+```bash
 npm run dev
 ```
 
@@ -100,22 +122,48 @@ NEXT_PUBLIC_MEDIA_CDN_URL=https://f005.backblazeb2.com/file/your-bucket-name
 
 ### Setting Up Supabase Database
 
-**Modern Approach (Recommended):**
+**⚠️ CRITICAL: Create database tables before deploying**
 
-The project now uses the Supabase CLI with proper migration management:
+The project requires 6 database tables in Supabase. See **[CREATE_TABLES.md](./CREATE_TABLES.md)** for complete setup instructions.
+
+**Quick Setup:**
 
 ```bash
-# Start local development database
-npm run supabase:start
+# Fastest way - runs all migrations
+npm run db:migrate
 
-# Apply migrations to production (requires Supabase CLI login)
-npx supabase login  # Login to Supabase CLI first
-npx supabase link --project-ref <your-project-ref>
+# Or use the quick script
+./create-tables.sh
+
+# Or use Supabase CLI
 npx supabase db push
-
-# Generate TypeScript types
-npm run supabase:types
 ```
+
+**Manual Setup (if automated methods fail):**
+
+1. Go to your Supabase project dashboard
+2. Navigate to: SQL Editor → New query
+3. Copy and paste the contents of `supabase-migrations.sql`
+4. Click "Run" to execute
+
+**Verify tables were created:**
+
+```bash
+npm run db:test
+```
+
+**Tables created:**
+- `weekly_votes` - Photo voting matchups
+- `vote_records` - Individual vote tracking
+- `friends_of_club` - Partner organizations
+- `timeline_events` - Lou Gehrig's life events
+- `faq_items` - Frequently asked questions
+- `calendar_events` - Club events and activities
+
+For detailed documentation, see:
+- **[CREATE_TABLES.md](./CREATE_TABLES.md)** - Table creation guide
+- **[SUPABASE_SETUP.md](./SUPABASE_SETUP.md)** - Complete Supabase setup
+- **[supabase/SCHEMA.md](./supabase/SCHEMA.md)** - Database schema details
 
 **Legacy Approach:**
 
