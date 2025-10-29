@@ -120,11 +120,11 @@ async function verifyB2Connectivity() {
       log.info('B2 configuration appears correct, but connectivity cannot be verified');
     } else if (error.name === 'NotFound') {
       log.error('Bucket does not exist or access denied');
-      log.detail('Bucket does not exist or access denied');
+      log.detail(`Bucket: ${backblazeBucket} | Error code: ${error.code || error.name} | Message: ${error.message}`);
       allChecksPass = false;
     } else if (error.name === 'Forbidden') {
       log.error('Access denied - check credentials');
-      log.detail('Access denied - check credentials');
+      log.detail('Verify your B2 keyID and applicationKey, and ensure they have permission to access this bucket.');
       allChecksPass = false;
     } else {
       log.error('Failed to access B2 bucket');

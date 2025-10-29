@@ -31,7 +31,7 @@ These are maintained for backwards compatibility:
 ```bash
 B2_KEY_ID=your-key-id
 B2_APP_KEY=your-application-key
-B2_BUCKET=your-bucket-id
+B2_BUCKET=your-bucket-name
 B2_ENDPOINT=s3.us-east-005.backblazeb2.com
 PUBLIC_B2_BASE_URL=https://f005.backblazeb2.com/file/your-bucket-name
 ```
