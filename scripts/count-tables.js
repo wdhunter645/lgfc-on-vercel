@@ -32,11 +32,12 @@ async function countTables() {
   log.header('📊 Counting Tables in Supabase Database');
   console.log('='.repeat(70) + '\n');
 
-  // Check environment variables
+  // Check environment variables (prefer service role key for complete table access)
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 
-                      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 
-                      process.env.NEXT_PUBLIC_SUPABASE_API_KEY;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 
+                  process.env.NEXT_PUBLIC_SUPABASE_API_KEY;
+  const supabaseKey = serviceRoleKey || anonKey;
 
   if (!supabaseUrl || !supabaseKey) {
     log.error('Missing Supabase credentials');
@@ -48,6 +49,11 @@ async function countTables() {
   }
 
   log.info(`Connecting to: ${supabaseUrl}`);
+  
+  if (!serviceRoleKey) {
+    log.warning('Using anonymous key - some tables may not be accessible');
+    log.info('For complete access, set SUPABASE_SERVICE_ROLE_KEY environment variable');
+  }
 
   // Create Supabase client
   const supabase = createClient(supabaseUrl, supabaseKey);
@@ -70,10 +76,10 @@ async function countTables() {
   // Check each expected table
   for (const tableName of expectedTables) {
     try {
+      // Use head request with count to check table existence
       const { error } = await supabase
         .from(tableName)
-        .select('count')
-        .limit(0);
+        .select('*', { count: 'exact', head: true });
 
       if (error) {
         if (error.code === '42P01') {
@@ -94,10 +100,13 @@ async function countTables() {
   }
 
   // Try to query the information schema directly for a comprehensive count
+  // Note: This requires the exec_sql RPC function to be created in Supabase
+  // If not available, we'll use the manual check results instead
   console.log('\n' + colors.bold + 'Querying Database Schema:' + colors.reset + '\n');
   
   try {
     // Query to get all user tables from information schema
+    // This requires a custom RPC function: exec_sql(query text)
     const { data, error } = await supabase
       .rpc('exec_sql', {
         query: `
@@ -110,7 +119,7 @@ async function countTables() {
       });
 
     if (error) {
-      log.warning('Unable to query information schema directly');
+      log.info('Direct schema query not available (requires custom exec_sql RPC function)');
       log.info('Using manual table check results instead');
     } else if (data) {
       log.success('Successfully queried database schema');
@@ -121,8 +130,8 @@ async function countTables() {
       console.log(`\n${colors.bold}Total tables in database: ${data.length}${colors.reset}`);
     }
   } catch (error) {
-    log.warning('Direct schema query not available');
-    log.info('This requires a custom RPC function or service role key');
+    log.info('Direct schema query not available (requires custom exec_sql RPC function)');
+    log.info('Using manual table check results - this is expected and normal');
   }
 
   // Summary
