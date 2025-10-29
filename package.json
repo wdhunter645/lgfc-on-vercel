@@ -18,6 +18,7 @@
     "db:export": "node scripts/export-migrations.js",
     "db:count-tables": "node scripts/count-tables.js",
     "verify:supabase": "node scripts/verify-supabase-setup.js",
+    "verify:agent-connectivity": "node scripts/verify-agent-supabase-connectivity.js",
     "supabase:start": "npx supabase start",
     "supabase:stop": "npx supabase stop",
     "supabase:status": "npx supabase status",
