@@ -11,6 +11,9 @@ npm install
 # Initialize Supabase (already done)
 npx supabase init
 
+# Login to Supabase CLI (required for production operations)
+npx supabase login
+
 # Link to production project
 npx supabase link --project-ref YOUR_PROJECT_REF
 
@@ -44,6 +47,10 @@ npm run supabase:reset
 
 ```bash
 # Generate TypeScript types from local database
+npm run supabase:types
+
+# Generate types from local database
+# Note: This overwrites app/lib/database.types.ts - ensure you have committed any changes first
 npm run supabase:types
 
 # Generate types from production
@@ -241,7 +248,7 @@ SUPABASE_SERVICE_ROLE_KEY=<from supabase dashboard>
 
 ## Getting Help
 
-1. Check [supabase/README.md](./supabase/README.md) for detailed setup
-2. Review [supabase/SCHEMA.md](./supabase/SCHEMA.md) for database schema
-3. See [SUPABASE_SETUP.md](./SUPABASE_SETUP.md) for comprehensive guide
-4. Check [SUPABASE_TROUBLESHOOTING.md](./SUPABASE_TROUBLESHOOTING.md) for issues
+1. Check [supabase/README.md](supabase/README.md) for detailed setup
+2. Review [supabase/SCHEMA.md](supabase/SCHEMA.md) for database schema
+3. See [SUPABASE_SETUP.md](SUPABASE_SETUP.md) for comprehensive guide
+4. Check [SUPABASE_TROUBLESHOOTING.md](SUPABASE_TROUBLESHOOTING.md) for issues

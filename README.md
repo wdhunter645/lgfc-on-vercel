@@ -108,7 +108,8 @@ The project now uses the Supabase CLI with proper migration management:
 # Start local development database
 npm run supabase:start
 
-# Apply migrations to production
+# Apply migrations to production (requires Supabase CLI login)
+npx supabase login  # Login to Supabase CLI first
 npx supabase link --project-ref <your-project-ref>
 npx supabase db push
 
